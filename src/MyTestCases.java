@@ -1,4 +1,5 @@
 import java.time.LocalDate;
+import java.util.Random;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -11,6 +12,7 @@ import org.testng.annotations.Test;
 public class MyTestCases {
 	WebDriver driver = new ChromeDriver();
 	String WebSiteURL = "https://global.almosafer.com/en";
+	Random rand = new Random();
 
 	@BeforeTest
 	public void mySetup() {
@@ -82,6 +84,28 @@ public class MyTestCases {
 				.findElement(By.cssSelector("#testIdPickerPrefix__DatePicker__ArrivalDate")).getAttribute("value");
 		Assert.assertTrue(ActualCheckReturnDate.contains(Integer.toString(AfterTomorrow)),
 				"Return date does not match expected tomorrow's date");
+	}
+
+	@Test(priority = 8)
+	public void RandomlyChangeTheLanguage() {
+		String[] myWebsites = { "https://www.almosafer.com/ar", "https://www.almosafer.com/en" };
+		int randomIndex = rand.nextInt(myWebsites.length);
+		driver.get(myWebsites[randomIndex]);
+		
+		if (driver.getCurrentUrl().contains("ar")) {
+			String ActualLanguage = driver.findElement(By.tagName("html")).getAttribute("lang");
+			String ExpectedLanguage = "ar";
+			Assert.assertEquals(ActualLanguage, ExpectedLanguage);
+		}
+
+		else {
+			{
+				String ActualLanguage = driver.findElement(By.tagName("html")).getAttribute("lang");
+				String ExpectedLanguage = "en";
+				Assert.assertEquals(ActualLanguage, ExpectedLanguage);
+			}
+		}
+
 	}
 
 }
