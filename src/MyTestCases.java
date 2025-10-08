@@ -5,6 +5,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -87,25 +88,37 @@ public class MyTestCases {
 	}
 
 	@Test(priority = 8)
-	public void RandomlyChangeTheLanguage() {
+	public void RandomlyChangeTheLanguage() throws InterruptedException {
+
+		String[] EnglishCitiesNames = { "jaddah", "riyadh", "dubai" };
+		String[] ArabicCitiesNames = { "دبي", "جدة" };
+
+		int randomArabicCity = rand.nextInt(ArabicCitiesNames.length);
+		int randomEnglishCity = rand.nextInt(EnglishCitiesNames.length);
+
 		String[] myWebsites = { "https://www.almosafer.com/ar", "https://www.almosafer.com/en" };
 		int randomIndex = rand.nextInt(myWebsites.length);
 		driver.get(myWebsites[randomIndex]);
+
+		WebElement HotelTab = driver.findElement(By.id("tab-hotels"));
+		HotelTab.click();
 		
+		WebElement HotelSerchBar = driver.findElement(By.cssSelector("#DesktopSearchWidget_Destination_InputField_Test_Id"));
 		if (driver.getCurrentUrl().contains("ar")) {
 			String ActualLanguage = driver.findElement(By.tagName("html")).getAttribute("lang");
 			String ExpectedLanguage = "ar";
-			Assert.assertEquals(ActualLanguage, ExpectedLanguage);
-		}
+			Assert.assertEquals(ActualLanguage, ExpectedLanguage); 
+			HotelSerchBar.sendKeys(ArabicCitiesNames[randomArabicCity]);
+			}
 
 		else {
-			{
 				String ActualLanguage = driver.findElement(By.tagName("html")).getAttribute("lang");
 				String ExpectedLanguage = "en";
-				Assert.assertEquals(ActualLanguage, ExpectedLanguage);
-			}
+				Assert.assertEquals(ActualLanguage, ExpectedLanguage); 
+				HotelSerchBar.sendKeys(EnglishCitiesNames[randomEnglishCity]);
+				}
+		
+		
 		}
-
-	}
 
 }
